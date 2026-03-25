@@ -8,29 +8,32 @@ public class FloodFillFrame extends JFrame {
     private final BufferedImage originalImage;
     private final JanelaImagem painelImagem;
 
-    private final JColorChooser chooser;
     private final JRadioButton rbPilha;
     private final JRadioButton rbFila;
     private final JLabel labelX;
     private final JLabel labelY;
     private final JLabel instrucao;
     private final JButton btnExecutar;
+    private final JPanel previewCor;
+    private final JButton btnEscolherCor;
 
     private Integer selectedX;
     private Integer selectedY;
+    private Color corSelecionada = Color.MAGENTA;
 
     public FloodFillFrame(BufferedImage originalImage) {
         super("Flood Fill");
         this.originalImage = originalImage;
 
         this.painelImagem = new JanelaImagem(originalImage);
-        this.chooser = new JColorChooser(Color.MAGENTA);
         this.rbPilha = new JRadioButton("Pilha (DFS)", true);
         this.rbFila = new JRadioButton("Fila (BFS)");
         this.labelX = new JLabel("x: não definido");
         this.labelY = new JLabel("y: não definido");
         this.instrucao = new JLabel("<html>Clique para escolher<br> a posição inicial</html>");
         this.btnExecutar = new JButton("Executar");
+        this.previewCor = new JPanel();
+        this.btnEscolherCor = new JButton("Escolher cor");
 
         configurarUI();
         registrarCliqueNaImagem();
@@ -51,10 +54,19 @@ public class FloodFillFrame extends JFrame {
         controles.add(Box.createVerticalStrut(10));
         controles.add(new JLabel("Cor nova:"));
 
-        // Deixa o chooser rolável quando a janela é redimensionada.
-        JScrollPane chooserScroll = new JScrollPane(chooser);
-        chooserScroll.setAlignmentX(Component.LEFT_ALIGNMENT);
-        controles.add(chooserScroll);
+        previewCor.setBackground(corSelecionada);
+        previewCor.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+        previewCor.setMaximumSize(new Dimension(40, 24));
+        previewCor.setPreferredSize(new Dimension(40, 24));
+        previewCor.setMinimumSize(new Dimension(40, 24));
+
+        btnEscolherCor.addActionListener(e -> escolherCor());
+
+        JPanel linhaCor = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 0));
+        linhaCor.setAlignmentX(Component.LEFT_ALIGNMENT);
+        linhaCor.add(previewCor);
+        linhaCor.add(btnEscolherCor);
+        controles.add(linhaCor);
 
         ButtonGroup metodoGroup = new ButtonGroup();
         metodoGroup.add(rbPilha);
@@ -87,8 +99,15 @@ public class FloodFillFrame extends JFrame {
 
     private void panelSizeHints() {
         painelImagem.setPreferredSize(new Dimension(originalImage.getWidth(), originalImage.getHeight()));
-        chooser.setPreferredSize(new Dimension(220, 180));
         setMinimumSize(new Dimension(originalImage.getWidth() + 260, originalImage.getHeight()));
+    }
+
+    private void escolherCor() {
+        Color nova = JColorChooser.showDialog(this, "Escolher cor do preenchimento", corSelecionada);
+        if (nova != null) {
+            corSelecionada = nova;
+            previewCor.setBackground(corSelecionada);
+        }
     }
 
     private void registrarCliqueNaImagem() {
@@ -116,7 +135,7 @@ public class FloodFillFrame extends JFrame {
             return;
         }
 
-        Color novaCor = chooser.getColor();
+        Color novaCor = corSelecionada;
         boolean usarPilha = rbPilha.isSelected();
 
         btnExecutar.setEnabled(false);
