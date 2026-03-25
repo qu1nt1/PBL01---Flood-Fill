@@ -29,5 +29,5 @@ bin/
 .DS_Store
 
 ### Frames ###
-/frames_fila/.
-/frames_pilha/.
+/frames_fila/*
+/frames_pilha/*

@@ -5,7 +5,7 @@ import java.awt.Color;
 
 public class FloodFill {
 
-    // =-=-=-=-= FILA =-=-=-=-=
+    //BFS: vizinhos 4 sentidos; fila = FIFO (largura)
     public static void preencherFila(BufferedImage img, int x, int y, Color novaCor, JanelaImagem tela) throws Exception {
 
         int largura = img.getWidth();
@@ -34,10 +34,10 @@ public class FloodFill {
 
             img.setRGB(px, py, novaCorRGB);
             tela.atualizarImagem(img);
-            // pintar mais devagar
+            //ms por pixel(0 é o mais rápido)
             Thread.sleep(1);
 
-            // salva frames a cada 200
+            //print a cada 200 frames
             if (frame % 200 == 0) {
                 ImageIO.write(img, "png", new File("frames_fila/frame_" + frame + ".png"));
             }
@@ -52,7 +52,7 @@ public class FloodFill {
         ImageIO.write(img, "png", new File("resultado_fila.png"));
     }
 
-    // =-=-=-= PILHA =-=-=-=
+    //DFS: empilha vizinhos; visitado[][] evita reprocessar o mesmo (x,y)
     public static void preencherPilha(BufferedImage img, int x, int y, Color novaCor, JanelaImagem tela) {
 
         int largura = img.getWidth();
@@ -93,6 +93,7 @@ public class FloodFill {
             }
 
             try {
+                //print a cada 200 frames
                 if (frame % 200 == 0) {
                     File pasta = new File("frames_pilha");
                     pasta.mkdirs();
@@ -103,6 +104,7 @@ public class FloodFill {
 
                 frame++;
 
+                //ms por pixel (alinhe com preencherFila para comparar velocidade visual)
                 Thread.sleep(1);
 
             } catch (Exception e) {

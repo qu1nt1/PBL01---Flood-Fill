@@ -12,6 +12,7 @@ public class JanelaImagem extends JPanel {
     }
 
     public void atualizarImagem(BufferedImage img) {
+        //repaint só na EDT (thread correta do Swing)
         SwingUtilities.invokeLater(() -> {
             this.imagem = img;
             repaint();

@@ -16,7 +16,7 @@ public class FloodFillWorker extends SwingWorker<Void, Void> {
         this.original = original;
         this.x = x;
         this.y = y;
-        // Evita que o alpha escolhido pelo UI deixe o preenchimento “apagado/escuro”.
+        //alpha 255: preenchimento opaco (Chooser pode vir com transparência)
         this.novaCor = new Color(novaCor.getRed(), novaCor.getGreen(), novaCor.getBlue(), 255);
         this.usarPilha = usarPilha;
         this.tela = tela;
@@ -33,7 +33,7 @@ public class FloodFillWorker extends SwingWorker<Void, Void> {
                 FloodFill.preencherFila(img, x, y, novaCor, tela);
             }
         } catch (Exception e) {
-            // Mantém a UI responsiva; em caso de erro, registra o stacktrace.
+            //erro no worker não trava a janela; veja o console
             e.printStackTrace();
         }
 
@@ -44,7 +44,7 @@ public class FloodFillWorker extends SwingWorker<Void, Void> {
         int width = img.getWidth();
         int height = img.getHeight();
 
-        // Garante um modelo de cor “universal” para que setRGB não converta a cor para tons de cinza.
+        //TYPE_INT_ARGB: cópia compatível com setRGB (evita cor vira cinza em alguns tipos)
         BufferedImage copia = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = copia.createGraphics();
         g2d.setComposite(AlphaComposite.Src);

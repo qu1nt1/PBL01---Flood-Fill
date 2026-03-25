@@ -5,6 +5,7 @@ import javax.swing.SwingUtilities;
 
 public class Main {
     public static void main(String[] args) throws Exception {
+        //arquivo PNG na raiz do projeto (troque o nome se precisar)
         BufferedImage img = ImageIO.read(new File("estrela.png"));
 
         SwingUtilities.invokeLater(() -> {
