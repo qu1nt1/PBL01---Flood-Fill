@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import javax.swing.SwingUtilities;
 
 public class JanelaImagem extends JPanel {
 
@@ -11,8 +12,10 @@ public class JanelaImagem extends JPanel {
     }
 
     public void atualizarImagem(BufferedImage img) {
-        this.imagem = img;
-        repaint();
+        SwingUtilities.invokeLater(() -> {
+            this.imagem = img;
+            repaint();
+        });
     }
 
     @Override
