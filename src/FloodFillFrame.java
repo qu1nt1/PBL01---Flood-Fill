@@ -26,6 +26,7 @@ public class FloodFillFrame extends JFrame {
         this.originalImage = originalImage;
 
         this.painelImagem = new JanelaImagem(originalImage);
+        this.painelImagem.setEscala(calcularEscalaAutomatica(originalImage));
         this.rbPilha = new JRadioButton("Pilha (DFS)", true);
         this.rbFila = new JRadioButton("Fila (BFS)");
         this.labelX = new JLabel("x: não definido");
@@ -98,8 +99,24 @@ public class FloodFillFrame extends JFrame {
     }
 
     private void panelSizeHints() {
-        painelImagem.setPreferredSize(new Dimension(originalImage.getWidth(), originalImage.getHeight()));
-        setMinimumSize(new Dimension(originalImage.getWidth() + 260, originalImage.getHeight()));
+        Dimension pref = painelImagem.getPreferredSize();
+        setMinimumSize(new Dimension(pref.width + 260, Math.max(pref.height, 240)));
+    }
+
+    private static int calcularEscalaAutomatica(BufferedImage img) {
+        int w = img.getWidth();
+        int h = img.getHeight();
+        int maior = Math.max(w, h);
+
+        if (maior >= 450) {
+            return 1;
+        }
+
+        int alvo = 650;
+        int escala = alvo / Math.max(1, maior);
+        if (escala < 1) escala = 1;
+        if (escala > 20) escala = 20;
+        return escala;
     }
 
     private void escolherCor() {
@@ -114,8 +131,9 @@ public class FloodFillFrame extends JFrame {
         painelImagem.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                int x = e.getX();
-                int y = e.getY();
+                Point p = painelImagem.viewParaImagem(e.getPoint());
+                int x = p.x;
+                int y = p.y;
 
                 if (x < 0 || y < 0 || x >= originalImage.getWidth() || y >= originalImage.getHeight()) {
                     return;
